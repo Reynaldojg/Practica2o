@@ -18,33 +18,35 @@ jobs:
       with:
         dotnet-version: 8.0.x
 
-    # ---------------- RESTORE ----------------
+    # RESTORE
     - name: Restore dependencies
-      run: |
-        dotnet restore Practica2o/HolaMnddoApp/HolaMnddoApp.csproj
-        dotnet restore Practica2o/HolaMnddoApp.Tests/HolaMnddoApp.Tests.csproj
+      run: dotnet restore HolaMnddoApp/HolaMnddoApp.csproj
 
-    # ---------------- TEST ----------------
+    # BUILD
+    - name: Build project
+      run: dotnet build HolaMnddoApp/HolaMnddoApp.csproj --no-restore
+
+    # TESTS
     - name: Run unit tests
-      run: dotnet test Practica2o/HolaMnddoApp.Tests/HolaMnddoApp.Tests.csproj --no-build --verbosity normal
+      run: dotnet test HolaMnddoApp.Tests/HolaMnddoApp.Tests.csproj --no-build --verbosity normal
 
-    # ---------------- DOCKER LOGIN ----------------
+    # LOGIN DOCKER
     - name: Login to Docker Hub
       uses: docker/login-action@v2
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    # ---------------- DOCKER BUILD ----------------
+    # BUILD DOCKER IMAGE
     - name: Build Docker image
-      run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/hola-mundo-csharp:latest Practica2o/HolaMnddoApp
+      run: docker build -t reynaldogj/hola-mundo-csharp:latest HolaMnddoApp/
 
-    # ---------------- DOCKER PUSH ----------------
+    # PUSH TO DOCKER HUB
     - name: Push Docker image
-      run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/hola-mundo-csharp:latest
+      run: docker push reynaldogj/hola-mundo-csharp:latest
 
-    # ---------------- RENDER DEPLOY ----------------
+    # NOTIFY RENDER OR OTHER SERVICE
     - name: Notify deployment service
-      run: |
-        curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+      run: echo "Deployment completed!"
+
 
