@@ -34,8 +34,8 @@ jobs:
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     - name: Build Docker image
-      run: docker build -t reynaldogj/hola-mundo-csharp:latest HolaMnddoApp/
+      run: docker build -t reynaldojg/hola-mundo-csharp:latest HolaMnddoApp/
 
     - name: Push Docker image
-      run: docker push reynaldogj/hola-mundo-csharp:latest
+      run: docker push reynaldojg/hola-mundo-csharp:latest
 
